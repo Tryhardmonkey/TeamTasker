@@ -15,3 +15,19 @@ export interface AuthResponse {
     name: string;
   };
 }
+
+export const LoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export type LoginInput = z.infer<typeof LoginSchema>;
+
+export interface LoginResponse {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+  accessToken: string;
+}
