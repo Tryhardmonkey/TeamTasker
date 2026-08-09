@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { RegisterSchema, LoginSchema } from "./auth.types";
 import { register, login } from "./auth.service";
+import { AuthenticatedRequest } from "../../middleware/authenticate";
 
 export async function registerUser(req: Request, res: Response, next: NextFunction) {
   try {
@@ -20,4 +21,8 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
   } catch (err) {
     next(err);
   }
+}
+
+export function getMe(req: AuthenticatedRequest, res: Response) {
+  res.status(200).json({ user: req.user });
 }
