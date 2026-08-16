@@ -18,4 +18,33 @@ model User {
   passwordHash String
   name         String
   createdAt    DateTime @default(now())
+
+  memberships WorkspaceMember[]
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model Workspace {
+  id        String            @id @default(cuid())
+  name      String
+  ownerId   String
+  createdAt DateTime          @default(now())
+  members   WorkspaceMember[]
+}
+
+model WorkspaceMember {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        WorkspaceRole
+  createdAt   DateTime      @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([workspaceId, userId])
 }
