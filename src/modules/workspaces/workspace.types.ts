@@ -12,3 +12,10 @@ export interface WorkspaceResponse {
   ownerId: string;
   createdAt: Date;
 }
+
+export const AddMemberSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(["ADMIN", "MEMBER"]),
+});
+
+export type AddMemberInput = z.infer<typeof AddMemberSchema>;

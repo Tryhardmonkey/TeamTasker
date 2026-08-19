@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../../middleware/authenticate";
-import { CreateWorkspaceSchema } from "./workspace.types";
-import { createWorkspace, listMyWorkspaces } from "./workspace.service";
+import { CreateWorkspaceSchema, AddMemberSchema } from "./workspace.types";
+import { createWorkspace, listMyWorkspaces,addMember } from "./workspace.service";
 
 export async function createWorkspaceHandler(
   req: AuthenticatedRequest,
@@ -25,6 +25,21 @@ export async function listWorkspacesHandler(
   try {
     const workspaces = await listMyWorkspaces(req.user!.id);
     res.status(200).json(workspaces);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function addMemberHandler(
+  req: AuthenticatedRequest<{ workspaceId: string }>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const input = AddMemberSchema.parse(req.body);
+    const { workspaceId } = req.params;
+    const membership = await addMember(workspaceId, req.user!.id, input);
+    res.status(201).json(membership);
   } catch (err) {
     next(err);
   }

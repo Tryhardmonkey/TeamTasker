@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { UnauthorizedError } from "../shared/errors";
+import { ParamsDictionary } from "express-serve-static-core";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest<P = ParamsDictionary> extends Request<P> {
   user?: { id: string; email: string };
 }
 

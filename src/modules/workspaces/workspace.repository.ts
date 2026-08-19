@@ -1,4 +1,5 @@
 import { prisma } from "../../config/database";
+import { findUserByEmail } from "../users/user.repository";
 
 export function createWorkspaceWithOwner(name: string, ownerId: string) {
   return prisma.$transaction(async (tx) => {
@@ -31,5 +32,15 @@ export function findWorkspaceMembership(workspaceId: string, userId: string) {
     where: {
       workspaceId_userId: { workspaceId, userId },
     },
+  });
+}
+
+export async function addMemberToWorkspace(
+  workspaceId: string,
+  userId: string,
+  role: "ADMIN" | "MEMBER"
+) {
+  return prisma.workspaceMember.create({
+    data: { workspaceId, userId, role },
   });
 }
